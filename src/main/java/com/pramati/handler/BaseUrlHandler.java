@@ -11,7 +11,7 @@ import com.pramati.urlvisitor.UrlVisitor;
 public class BaseUrlHandler {
 
 	@Autowired
-	UrlVisitor anchorVisitor;
+	private UrlVisitor anchorVisitor;
 
 	public void startCrawling(String baseUrl) {
 		ArrayDeque<String> urlQueue = new ArrayDeque<String>();

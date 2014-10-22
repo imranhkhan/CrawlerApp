@@ -20,4 +20,5 @@ public class MediaFileNameHandler {
 	public Map<String, String> getNameUrlMap() {
 		return nameUrlMap;
 	}
+	
 }

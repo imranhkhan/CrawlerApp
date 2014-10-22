@@ -20,21 +20,19 @@ import com.pramati.handler.MediaFileNameHandler;
 
 public class AnchorVisitor implements UrlVisitor {
 
-	@Autowired
-	FileNameHandler fileNameHandler;
+	private FileNameHandler fileNameHandler;
 
-	@Autowired
-	MediaFileNameHandler mediaFileNameHandler;
+	private MediaFileNameHandler mediaFileNameHandler;
 
-	@Autowired
-	Archiver pageArchiver;
+	private Archiver pageArchiver;
 
-	@Autowired
-	Archiver mediaArchiver;
+	private Archiver mediaArchiver;
 
-	private List<String> visitedUrls = new ArrayList<String>();
+	private List<String> visitedUrls;
 
 	public int visit(ArrayDeque<String> urlQueue) {
+		
+		visitedUrls = new ArrayList<String>();
 		
 		//Set the media path
 		((MediaArchiver)mediaArchiver).setLocation(((PageArchiver)pageArchiver).getLocation()+File.separator+"images");
@@ -74,21 +72,44 @@ public class AnchorVisitor implements UrlVisitor {
 						if (urlElement.tagName().equals("img")) {
 							String mediaName = mediaFileNameHandler
 									.mapUrlToFile(mUrl);
-							urlElement.attr("src", "images/" + mediaName);
+							urlElement.attr("src", "images"+File.separator+ mediaName);
 							mediaArchiver.archive(mUrl);
 						} else {
 							urlElement.attr("src", mUrl);
 						}
 					}
+					
 					pageArchiver.archive(doc, url);
 				}
 			} catch (Exception e) {
 				System.out.println("Problem occured while opening the url "
 						+ url + " Message " + e.getMessage());
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		return visitedUrls.size();
 	}
 
+	
+	@Autowired
+	public void setFileNameHandler(FileNameHandler fileNameHandler) {
+		this.fileNameHandler = fileNameHandler;
+	}
+
+	@Autowired
+	public void setMediaFileNameHandler(MediaFileNameHandler mediaFileNameHandler) {
+		this.mediaFileNameHandler = mediaFileNameHandler;
+	}
+
+
+	@Autowired
+	public void setPageArchiver(Archiver pageArchiver) {
+		this.pageArchiver = pageArchiver;
+	}
+
+    @Autowired
+	public void setMediaArchiver(Archiver mediaArchiver) {
+		this.mediaArchiver = mediaArchiver;
+	}
+	
 }

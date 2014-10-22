@@ -13,28 +13,38 @@ import com.pramati.handler.MediaFileNameHandler;
 
 public class MediaArchiver implements Archiver {
 
-	@Autowired
-	MediaFileNameHandler mediaFileNameHandler;
+	private MediaFileNameHandler mediaFileNameHandler;
 
 	private String location;
 
 	public void archive(String url) {
+
+		FileOutputStream mediaWriter = null;
 		try {
-			File file = new File(location);
-			if (!file.exists()) {
-				file.mkdir();
+
+			File locationFolder = new File(location);
+
+			if (!locationFolder.exists()) {
+
+				boolean isCreated = locationFolder.mkdir();
+				if (!isCreated)
+					throw new RuntimeException(
+							"creation of media directory failed!");
 			}
+
 			String fileName = mediaFileNameHandler.getNameUrlMap().get(url);
 			Response resultImageResponse = Jsoup.connect(url)
 					.ignoreContentType(true).execute();
 
-			FileOutputStream out = (new FileOutputStream(location
+			mediaWriter = (new FileOutputStream(location
 					+ File.separator + fileName));
-			out.write(resultImageResponse.bodyAsBytes());
-			out.close();
+			mediaWriter.write(resultImageResponse.bodyAsBytes());
+			mediaWriter.flush();
+			mediaWriter.close();
+
 		} catch (IOException e) {
-			
-			System.out.println("An error occured while saving the images"
+
+			System.out.println("An error occured while saving the image "
 					+ e.getMessage());
 			e.printStackTrace();
 		}
@@ -45,6 +55,13 @@ public class MediaArchiver implements Archiver {
 	}
 
 	public void archive(Document doc, String url) {
-		// Not Implemented
+		// Default Implementation
 	}
+
+	@Autowired
+	public void setMediaFileNameHandler(
+			MediaFileNameHandler mediaFileNameHandler) {
+		this.mediaFileNameHandler = mediaFileNameHandler;
+	}
+
 }

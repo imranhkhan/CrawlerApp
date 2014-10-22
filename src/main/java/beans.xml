@@ -13,7 +13,6 @@
 		<property name="location"
 			value="C:\\Users\\imrank\\Desktop\\Work\\CrwalerApp\\SavedPages"></property>
 	</bean>
-
 	<bean id="mediaArchiver" class="com.pramati.archiver.MediaArchiver"></bean>
 	<bean id="anchorVisitor" class="com.pramati.urlvisitor.AnchorVisitor"></bean>
 	<bean id="baseUrlHandler" class="com.pramati.handler.BaseUrlHandler"></bean>
